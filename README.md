@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Smart Companion — Micro-Wins for Task Initiation
 
 A neuro-inclusive AI companion designed to help users start tasks by reducing overwhelming goals into safe, immediate micro-actions.
@@ -94,3 +95,7 @@ If the AI is unavailable or fails, the system falls back to safe, predefined mic
 ```bash
 docker build -t smart-companion .
 docker run -p 3000:3000 smart-companion
+=======
+# smart.companion
+A calm, neuro-inclusive companion that helps you start with one small step—nothing more.
+>>>>>>> 0850358b37f76744523496bf5ea0cf7fd64f754a
