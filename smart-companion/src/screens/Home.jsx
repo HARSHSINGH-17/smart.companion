@@ -9,12 +9,18 @@ export default function Home({ onStart }) {
   const [isListening, setIsListening] = useState(false);
   const [tempKey, setTempKey] = useState("");
   const [hasApiKey, setHasApiKey] = useState(!!(import.meta.env.VITE_OPENAI_API_KEY || localStorage.getItem("openai_api_key")));
+  const isUsingEnvKey = !!import.meta.env.VITE_OPENAI_API_KEY;
 
   const handleSaveKey = () => {
     if (tempKey.trim().startsWith("sk-")) {
       localStorage.setItem("openai_api_key", tempKey.trim());
       setHasApiKey(true);
     }
+  };
+
+  const handleResetKey = () => {
+    localStorage.removeItem("openai_api_key");
+    setHasApiKey(false);
   };
 
   const playBeep = (freq) => {
@@ -61,6 +67,7 @@ export default function Home({ onStart }) {
 
   return (
     <Card>
+      <div className="max-h-[80vh] overflow-y-auto px-1">
       <h1 className="text-xs font-bold text-center mb-4 text-stone-400 uppercase tracking-widest">
         Smart Companion
       </h1>
@@ -108,6 +115,13 @@ export default function Home({ onStart }) {
       </div>
 
       <div className="space-y-3">
+        <button
+          onClick={() => onStart("cant_start")}
+          className="w-full py-3 bg-stone-800 text-stone-100 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-stone-700 transition-colors shadow-lg"
+        >
+          ⚡ Demo with Example
+        </button>
+
         <Button
           text="I can't start"
           onClick={() => onStart("cant_start")}
@@ -123,6 +137,10 @@ export default function Home({ onStart }) {
         <Button
           text="I'm tired"
           onClick={() => onStart("tired")}
+        />
+        <Button
+          text="I can't do anything"
+          onClick={() => onStart("modeZero")}
         />
         <Button
           text="I need help deciding"
@@ -143,6 +161,16 @@ export default function Home({ onStart }) {
           variant="secondary"
           onClick={() => onStart("settings")}
         />
+        
+        {hasApiKey && !isUsingEnvKey && (
+          <button 
+            onClick={handleResetKey}
+            className="w-full py-3 mt-4 bg-stone-100 text-stone-500 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-stone-200 transition-colors"
+          >
+            Change API Key
+          </button>
+        )}
+      </div>
       </div>
     </Card>
   );

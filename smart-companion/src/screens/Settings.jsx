@@ -5,6 +5,18 @@ import { usePreferences } from "../hooks/PreferencesContext";
 export default function Settings({ onBack }) {
   const { prefs, setPrefs } = usePreferences();
 
+  const handleClearCache = () => {
+    const keys = Object.keys(localStorage);
+    let count = 0;
+    keys.forEach((key) => {
+      if (key.startsWith("smc_cache_")) {
+        localStorage.removeItem(key);
+        count++;
+      }
+    });
+    alert(`Cleared ${count} cached responses. The AI will now generate fresh steps.`);
+  };
+
   const cycleFont = () => {
     const sizes = ["normal", "large", "xl", "2xl", "small"];
     const next = sizes[(sizes.indexOf(prefs.fontSize) + 1) % sizes.length];
@@ -12,8 +24,8 @@ export default function Settings({ onBack }) {
   };
 
   const cycleFontFamily = () => {
-    const families = ["sans", "serif", "mono"];
-    const current = prefs.fontFamily || "sans";
+    const families = ["default", "lexend", "dyslexic"];
+    const current = families.includes(prefs.fontFamily) ? prefs.fontFamily : "default";
     const next = families[(families.indexOf(current) + 1) % families.length];
     setPrefs({ fontFamily: next });
   };
@@ -26,14 +38,14 @@ export default function Settings({ onBack }) {
   };
 
   const toggleTone = () => {
-    setPrefs({ tone: prefs.tone === "gentle" ? "quiet" : "gentle" });
+    setPrefs({ tone: prefs.tone === "direct" ? "calm" : "direct" });
   };
 
   const resetPrefs = () => {
     setPrefs({
       fontSize: "normal",
-      fontFamily: "sans",
-      tone: "quiet",
+      fontFamily: "default",
+      tone: "calm",
       audio: false,
       textLength: "normal",
       highContrast: false,
@@ -72,7 +84,7 @@ export default function Settings({ onBack }) {
         />
         <Button
           variant="secondary"
-          text={formatLabel("Style", prefs.fontFamily || "sans")}
+          text={formatLabel("Font", prefs.fontFamily || "default")}
           onClick={cycleFontFamily}
         />
         <Button
@@ -102,8 +114,18 @@ export default function Settings({ onBack }) {
         />
         <Button
           variant="secondary"
+          text={`Reduce Intensity: ${prefs.lowIntensity ? "On ✓" : "Off"}`}
+          onClick={() => setPrefs({ lowIntensity: !prefs.lowIntensity })}
+        />
+        <Button
+          variant="secondary"
           text="Reset to Defaults"
           onClick={resetPrefs}
+        />
+        <Button
+          variant="secondary"
+          text="Clear AI Cache"
+          onClick={handleClearCache}
         />
       </div>
       <div className="mt-6">
